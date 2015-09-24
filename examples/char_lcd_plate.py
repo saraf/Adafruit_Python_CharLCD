@@ -1,12 +1,24 @@
 #!/usr/bin/python
 # Example using a character LCD plate.
 import time
+import signal
+import sys
 
 import Adafruit_CharLCD as LCD
 
 
 # Initialize the LCD using the pins 
 lcd = LCD.Adafruit_CharLCDPlate()
+
+def exit_handler(signal, frame):
+    print('Ctrl+C pressed')
+    lcd.clear()	
+    lcd.set_color(0.0, 0.0, 0.0)
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, exit_handler)
+
+print 'Press Ctrl-C to quit.'
 
 # create some custom characters
 lcd.create_char(1, [2, 3, 2, 2, 14, 30, 12, 0])
@@ -64,7 +76,7 @@ buttons = ( (LCD.SELECT, 'Select', (1,1,1)),
             (LCD.DOWN,   'Down'  , (0,1,0)),
             (LCD.RIGHT,  'Right' , (1,0,1)) )
 
-print 'Press Ctrl-C to quit.'
+
 while True:
 	# Loop through each button and check if it is pressed.
 	for button in buttons:
